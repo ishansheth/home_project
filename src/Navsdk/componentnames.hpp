@@ -19,6 +19,7 @@
 #include "../ComponentDependency/ComponentDependencyBase.hpp"
 #include "../ComponentDependency/ComponentDependency.hpp"
 #include "../Idependencymanager/Idependencymanager.hpp"
+#include "../Networking/NetComponent.hpp"
 
 // All forward Declaration
 

@@ -19,20 +19,16 @@
 
 class NetComponent:public IsdkComponent{
 
-boost::asio::io_service ioservice_;
+std::shared_ptr<boost::asio::io_service> ioservice_;
 boost::asio::ip::tcp::resolver resolve;
 boost::asio::ip::tcp::socket tcp_socket;
 boost::asio::ip::tcp::resolver::query query;
 std::array<char,4096> bytes;
 std::function<void()> m_componentTask;
+std::thread mainloopthread;
 
 public:
-NetComponent();
-
-void registerForTimerTask(std::function<void()>)
-{
-
-}
+NetComponent(Idependencymanager& dp);
 
 void do_resolve()
 {
@@ -81,20 +77,31 @@ void do_resolve()
 	 }
  }
 
-void timerCallback(const boost::system::error_code & e){
-	if(e){
-		return;
-	}else{
-
-	}
-}
- virtual void start() override{
-	 do_resolve();
-	 ioservice_.run();
+ ~NetComponent()
+ {
+	 if(mainloopthread.joinable())
+	 {
+		 mainloopthread.join();
+	 }
  }
+
+ virtual void start() override;
 
 };
 
+NetComponent::NetComponent(Idependencymanager &dp):
+	ioservice_(std::make_shared<boost::asio::io_service>()),
+	resolve(*ioservice_),
+	tcp_socket(*ioservice_),
+	query("highscore.de","80")
+{
+	(void)dp;
+}
 
+void NetComponent::start()
+{
+	std::cout<<"Netcomponent start"<<std::endl;
+	mainloopthread = std::thread([this](){do_resolve();ioservice_->run();});
+}
 
 #endif /* SRC_NETWORKING_NETCOMPONENT_HPP_ */

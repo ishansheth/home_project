@@ -12,10 +12,11 @@
 #include <boost/thread.hpp>
 #include <boost/asio.hpp>
 #include <boost/signals2/signal.hpp>
+#include "../interfaces/IsdkComponent.hpp"
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 
-class IEventloop{
+class IEventloop:public IsdkComponent{
 public:
 	enum class TimerGroup:int{
 		TWO_HUNDRED_MILLIS,
@@ -34,7 +35,6 @@ public:
 	virtual std::shared_ptr<AsioEventLoop> getEventloop()=0;
 	virtual std::shared_ptr<TimerEventSignal> getPeriodicSignal(const TimerGroup& grp)=0;
 	virtual void start()=0;
-
 };
 
 class EventLoop : public IEventloop{
@@ -59,12 +59,12 @@ private:
 	};
 public:
 
-	EventLoop();
+	EventLoop(Idependencymanager &dp);
 	~EventLoop();
 	virtual std::shared_ptr<AsioEventLoop> getEventloop() override;
 	virtual std::shared_ptr<TimerEventSignal> getPeriodicSignal(const TimerGroup& grp) override;
 	virtual void start() override;
-
+	void launch();
 private:
 	std::shared_ptr<AsioEventLoop> m_asioeventloop;
 	SignalTimer m_signaltwohundredmillis;
@@ -74,9 +74,12 @@ private:
 	SignalTimer m_signaloneminute;
 	SignalTimer m_signalfiveminute;
 	SignalTimer m_signalonehour;
+	std::thread mainloopthread;
+
 };
+
 void EventLoop::start(){
-	m_asioeventloop->run();
+	mainloopthread = std::thread([this](){m_asioeventloop->run();});
 }
 
 EventLoop::SignalTimer::SignalTimer(const std::shared_ptr<AsioEventLoop> el,const enum TimerGroup group, const size_t interval):
@@ -100,10 +103,14 @@ EventLoop::SignalTimer::~SignalTimer(){
 	m_timer.cancel();
 }
 EventLoop::~EventLoop(){
-	m_asioeventloop->stop();
+	if(mainloopthread.joinable())
+	{
+		mainloopthread.join();
+	}
+//	m_asioeventloop->stop();
 }
 
-EventLoop::EventLoop():
+EventLoop::EventLoop(Idependencymanager &dp):
 		m_asioeventloop(std::make_shared<boost::asio::io_service>()),
 		m_signaltwohundredmillis(m_asioeventloop,TimerGroup::TWO_HUNDRED_MILLIS,200),
 		m_signalfivehundredmillis(m_asioeventloop,TimerGroup::FIVE_HUNDRED_MILLIS,500),
@@ -113,6 +120,7 @@ EventLoop::EventLoop():
 		m_signalfiveminute(m_asioeventloop,TimerGroup::FIVE_MINUTE,5000*10),
 		m_signalonehour(m_asioeventloop,TimerGroup::ONE_HOUR,5000*10*12)
 {
+	(void)dp;
 	m_signaltwohundredmillis.repeat();
 	m_signalfivehundredmillis.repeat();
 	m_signalonesecond.repeat();
