@@ -1,0 +1,1 @@
+/usr/bin/c++   -std=c++11  -O3 -DNDEBUG    CMakeFiles/home_project.dir/src/my_class.cpp.o  -o home_project  -L/usr/local/lib -rdynamic -lboost_system -lcurl -lpthread -Wl,-rpath,/usr/local/lib: 
