@@ -1,8 +1,7 @@
 /*
  * NetComponent.hpp
- *
- *  Created on: Apr 10, 2017
- *      Author: ishan
+ *	The net component which has a functionality of resolving
+ *	the URL initialized in the query
  */
 
 #ifndef SRC_NETWORKING_NETCOMPONENT_HPP_
@@ -19,16 +18,16 @@
 
 class NetComponent:public IsdkComponent{
 
-std::shared_ptr<boost::asio::io_service> ioservice_;
+boost::asio::io_service& ioservice_;
 boost::asio::ip::tcp::resolver resolve;
 boost::asio::ip::tcp::socket tcp_socket;
 boost::asio::ip::tcp::resolver::query query;
 std::array<char,4096> bytes;
 std::function<void()> m_componentTask;
-std::thread mainloopthread;
+std::string resolveURL;
 
 public:
-NetComponent(Idependencymanager& dp);
+NetComponent(Idependencymanager& dp,boost::asio::io_service&,const std::string&);
 
 void do_resolve()
 {
@@ -46,14 +45,13 @@ void do_resolve()
 		 });
 	 }else{
  	 	 std::cout<<"in resolve_handler with error"<<std::endl;
-
 	 }
  }
 
  void connect_handler(const boost::system::error_code &ec)
  {
 	 if(!ec){
-			std::string r = "GET / HTTP/1.1\r\nHost: highscore.de\r\n\r\n";
+			std::string r = "GET / HTTP/1.1\r\nHost:"+ resolveURL +"\r\n\r\n";
 			boost::asio::write(tcp_socket,boost::asio::buffer(r));
 			tcp_socket.async_read_some(boost::asio::buffer(bytes),[this](const boost::system::error_code &ec, std::size_t bytes_transferred)
 					{
@@ -79,29 +77,24 @@ void do_resolve()
 
  ~NetComponent()
  {
-	 if(mainloopthread.joinable())
-	 {
-		 mainloopthread.join();
-	 }
  }
 
- virtual void start() override;
+ virtual void start() override{
+		do_resolve();
+		std::cout<<"Netcomponent start"<<std::endl;
+ }
 
 };
 
-NetComponent::NetComponent(Idependencymanager &dp):
-	ioservice_(std::make_shared<boost::asio::io_service>()),
-	resolve(*ioservice_),
-	tcp_socket(*ioservice_),
-	query("highscore.de","80")
+NetComponent::NetComponent(Idependencymanager &dp,boost::asio::io_service& ioser,const std::string& urlstring):
+	ioservice_(ioser),
+	resolve(ioser),
+	tcp_socket(ioser),
+	resolveURL(urlstring),
+	query(urlstring,"80")
 {
 	(void)dp;
 }
 
-void NetComponent::start()
-{
-	std::cout<<"Netcomponent start"<<std::endl;
-	mainloopthread = std::thread([this](){do_resolve();ioservice_->run();});
-}
 
 #endif /* SRC_NETWORKING_NETCOMPONENT_HPP_ */

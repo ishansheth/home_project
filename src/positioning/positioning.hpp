@@ -5,11 +5,11 @@
  *      Author: ishan
  */
 
-#ifndef SRC_COMPONENT1_COMPONENT1_HPP_
-#define SRC_COMPONENT1_COMPONENT1_HPP_
+#ifndef SRC_POSITIONING_POSITIONING_HPP_
+#define SRC_POSITIONING_POSITIONING_HPP_
 
 #include "../Idependencymanager/Idependencymanager.hpp"
-#include "../interfaces/icomp1.hpp"
+#include "../interfaces/IPositioning.hpp"
 #include "../interfaces/LanguageChangeInterface.hpp"
 #include "../interfaces/ilcm.hpp"
 #include "../interfaces/IsdkComponent.hpp"
@@ -18,7 +18,7 @@
 class LanguageChangeInterface;
 class ILCM;
 
-class Component1:public Icomp1,public IsdkComponent,public LanguageChangeInterface{
+class Positioning:public IPositioning,public LanguageChangeInterface{
 	ComponentDependency<ILCM> m_lcm;
 	void run(){
 		while(1){
@@ -28,14 +28,14 @@ class Component1:public Icomp1,public IsdkComponent,public LanguageChangeInterfa
 	std::thread mainLoopthread;
 	int i;
 public:
-	Component1(Idependencymanager &dp):m_lcm(dp){}
-	~Component1(){
+	Positioning(Idependencymanager &dp):m_lcm(dp,"positioning",1,1){}
+	~Positioning(){
 		if(mainLoopthread.joinable())
 			mainLoopthread.join();
 		}
 
 	virtual void start() override{
-		mainLoopthread = std::thread(&Component1::run,this);
+		mainLoopthread = std::thread(&Positioning::run,this);
 	}
 	virtual void component1_method(std::shared_ptr<ILCM> lcm_ptr) override{
 		std::cout<<"inside component1 method"<<std::endl;
@@ -51,4 +51,4 @@ public:
 
 };
 
-#endif /* SRC_COMPONENT1_COMPONENT1_HPP_ */
+#endif /* SRC_POSITIONING_POSITIONING_HPP_ */

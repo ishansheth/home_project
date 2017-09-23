@@ -5,12 +5,13 @@
  *      Author: ishan
  */
 
-#ifndef SRC_INTERFACES_ICOMP2_HPP_
-#define SRC_INTERFACES_ICOMP2_HPP_
+#ifndef SRC_INTERFACES_IPATHFINDER_HPP_
+#define SRC_INTERFACES_IPATHFINDER_HPP_
 
 #include<memory>
 #include "ilcm.hpp"
-class Icomp2{
+#include "IsdkComponent.hpp"
+class IPathFinder:public IsdkComponent{
 public:
 	virtual void component2_method(std::shared_ptr<ILCM> lcm_ptr)=0;
 
@@ -19,4 +20,4 @@ public:
 
 
 
-#endif /* SRC_INTERFACES_ICOMP2_HPP_ */
+#endif /* SRC_INTERFACES_IPATHFINDER_HPP_ */

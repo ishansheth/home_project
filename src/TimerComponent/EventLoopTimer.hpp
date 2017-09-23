@@ -106,8 +106,9 @@ EventLoop::~EventLoop(){
 	if(mainloopthread.joinable())
 	{
 		mainloopthread.join();
+		m_asioeventloop->stop();
+
 	}
-//	m_asioeventloop->stop();
 }
 
 EventLoop::EventLoop(Idependencymanager &dp):

@@ -9,17 +9,22 @@
 #define SRC_COMPONENTNAMES_HPP_
 
 #include "Navsdk.hpp"
-#include "../interfaces/icomp1.hpp"
-#include "../interfaces/icomp2.hpp"
 #include "../interfaces/ilcm.hpp"
-#include "../component1/component1.hpp"
-#include "../component2/component2.hpp"
 #include "../lcm/lcm.hpp"
+#include "../lcm/LCMFactory.hpp"
 #include "../TimerComponent/EventLoopTimer.hpp"
 #include "../ComponentDependency/ComponentDependencyBase.hpp"
 #include "../ComponentDependency/ComponentDependency.hpp"
+#include "../interfaces/IPathFinder.hpp"
+#include "../interfaces/IPositioning.hpp"
 #include "../Idependencymanager/Idependencymanager.hpp"
 #include "../Networking/NetComponent.hpp"
+#include "../pathfinder/pathfinder.hpp"
+#include "../pathfinder/PathfinderFactory.hpp"
+#include "../positioning/positioning.hpp"
+#include "../positioning/PositioningFactory.hpp"
+
+
 
 // All forward Declaration
 

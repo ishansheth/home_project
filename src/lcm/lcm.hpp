@@ -11,15 +11,13 @@
 #include<map>
 #include "../interfaces/ilcm.hpp"
 #include "../interfaces/LanguageChangeInterface.hpp"
-#include "../interfaces/icomp1.hpp"
 #include "../interfaces/IsdkComponent.hpp"
 #include "../Idependencymanager/Idependencymanager.hpp"
 #include "../ComponentDependency/ComponentDependency.hpp"
 
 class LanguageChangeInterface;
-class Icomp1;
 
-class LCM:public ILCM,public IsdkComponent{
+class LCM:public ILCM{
 	std::map<std::string,LanguageChangeInterface* > m_componentMap;
 	std::function<void(std::string)> callback_func_ptr;
 	std::list<std::string> resultList;

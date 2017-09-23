@@ -20,5 +20,5 @@
 int main()
 {
 	std::shared_ptr<Navsdk> navSdkPtr = std::make_shared<Navsdk>();
-	navSdkPtr->startApplication();
+	navSdkPtr->start();
 }

@@ -10,28 +10,46 @@
 
 #include<memory>
 #include "componentnames.hpp"
+#include <boost/asio/io_service.hpp>
 
 class Navsdk:public Idependencymanager{
 	std::thread mainLoopthread;
 	std::list<ComponentDependencyBase*> m_componentlist;
+	std::list<std::shared_ptr<IsdkComponent>> m_factoryComponents;
+	boost::asio::io_service* ioservice_instance;
+	std::thread mainloopthread;
 
 public:
-	Navsdk(){}
+	Navsdk()
+	{
+		ioservice_instance = new boost::asio::io_service();
+	}
 	~Navsdk(){
+		if(mainloopthread.joinable())
+		{
+			mainloopthread.join();
+		}
 	}
 	void start(){
+		startApplication();
 	}
-
+private:
 	void dependencyMethod(ComponentDependencyBase* componentObj){
-		std::cout<<"inside Navsdk::dependency method"<<std::endl;
 		m_componentlist.push_back(componentObj);
 	}
 
+	template<typename Interface,typename Factory>
+	void createComponents()
+	{
+		std::shared_ptr<Interface> ptr = Factory::createComponent(*this);
+		m_factoryComponents.push_back(ptr);
+	}
+
 	void startApplication(){
-		std::shared_ptr<IsdkComponent> ptr1 = std::make_shared<Component1>(*this);
-		std::shared_ptr<IsdkComponent> ptr2 = std::make_shared<Component2>(*this);
-		std::shared_ptr<IsdkComponent> lcm_ptr = std::make_shared<LCM>(*this);
-		std::shared_ptr<IsdkComponent> net_comp = std::make_shared<NetComponent>(*this);
+		createComponents<IPathFinder,PathFinderFactory>();
+		createComponents<IPositioning,PositioningFactory>();
+		createComponents<ILCM,LCMFactory>();
+		std::shared_ptr<IsdkComponent> net_comp = std::make_shared<NetComponent>(*this,*ioservice_instance,"highscore.de");
 
 		// generating the EventLoop and getting the signals from it
 		std::shared_ptr<IEventloop> eloop = std::make_shared<EventLoop>(*this);
@@ -45,16 +63,9 @@ public:
 		});
 		eloop->start();
 
-		//starting the Component1 and 2
-		ptr1->start();
-		ptr2->start();
-
-		//starting the LCM component
-		lcm_ptr->start();
-
 		//starting the tcp component
 		net_comp->start();
-
+		mainloopthread = std::thread([this](){ioservice_instance->run();});
 		std::cout<<"in start app:"<<m_componentlist.size()<<std::endl;
 
 	}

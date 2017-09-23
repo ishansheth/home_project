@@ -9,7 +9,8 @@
 #define SRC_INTERFACES_ILCM_HPP_
 
 #include "LanguageChangeInterface.hpp"
-class ILCM{
+#include "IsdkComponent.hpp"
+class ILCM : public IsdkComponent{
 public:
 	virtual void registerForLanguageChange(std::string,LanguageChangeInterface &)=0;
 	virtual void print_component_map()=0;

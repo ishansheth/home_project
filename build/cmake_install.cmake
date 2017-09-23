@@ -37,7 +37,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
      NOT IS_SYMLINK "$ENV{DESTDIR}/home/ishan/githubRepo/homeproject/bin/home_project")
     FILE(RPATH_CHECK
          FILE "$ENV{DESTDIR}/home/ishan/githubRepo/homeproject/bin/home_project"
-         RPATH "/usr/local/lib")
+         RPATH "")
   ENDIF()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
    "/home/ishan/githubRepo/homeproject/bin/home_project")
@@ -50,10 +50,6 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 FILE(INSTALL DESTINATION "/home/ishan/githubRepo/homeproject/bin" TYPE EXECUTABLE FILES "/home/ishan/githubRepo/homeproject/build/home_project")
   IF(EXISTS "$ENV{DESTDIR}/home/ishan/githubRepo/homeproject/bin/home_project" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}/home/ishan/githubRepo/homeproject/bin/home_project")
-    FILE(RPATH_CHANGE
-         FILE "$ENV{DESTDIR}/home/ishan/githubRepo/homeproject/bin/home_project"
-         OLD_RPATH "/usr/local/lib:"
-         NEW_RPATH "/usr/local/lib")
     IF(CMAKE_INSTALL_DO_STRIP)
       EXECUTE_PROCESS(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/home/ishan/githubRepo/homeproject/bin/home_project")
     ENDIF(CMAKE_INSTALL_DO_STRIP)

@@ -53,15 +53,15 @@ CMakeFiles/home_project.dir/src/my_class.cpp.o: CMakeFiles/home_project.dir/flag
 CMakeFiles/home_project.dir/src/my_class.cpp.o: ../src/my_class.cpp
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/ishan/githubRepo/homeproject/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/home_project.dir/src/my_class.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/home_project.dir/src/my_class.cpp.o -c /home/ishan/githubRepo/homeproject/src/my_class.cpp
+	/usr/bin/g++-6   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/home_project.dir/src/my_class.cpp.o -c /home/ishan/githubRepo/homeproject/src/my_class.cpp
 
 CMakeFiles/home_project.dir/src/my_class.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/home_project.dir/src/my_class.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/ishan/githubRepo/homeproject/src/my_class.cpp > CMakeFiles/home_project.dir/src/my_class.cpp.i
+	/usr/bin/g++-6  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/ishan/githubRepo/homeproject/src/my_class.cpp > CMakeFiles/home_project.dir/src/my_class.cpp.i
 
 CMakeFiles/home_project.dir/src/my_class.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/home_project.dir/src/my_class.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/ishan/githubRepo/homeproject/src/my_class.cpp -o CMakeFiles/home_project.dir/src/my_class.cpp.s
+	/usr/bin/g++-6  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/ishan/githubRepo/homeproject/src/my_class.cpp -o CMakeFiles/home_project.dir/src/my_class.cpp.s
 
 CMakeFiles/home_project.dir/src/my_class.cpp.o.requires:
 .PHONY : CMakeFiles/home_project.dir/src/my_class.cpp.o.requires

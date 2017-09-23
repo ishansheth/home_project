@@ -5,18 +5,18 @@
  *      Author: ishan
  */
 
-#ifndef SRC_COMPONENT2_COMPONENT2_HPP_
-#define SRC_COMPONENT2_COMPONENT2_HPP_
+#ifndef SRC_PATHFINDER_PATHFINDER_HPP_
+#define SRC_PATHFINDER_PATHFINDER_HPP_
 
 #include "../Idependencymanager/Idependencymanager.hpp"
-#include "../interfaces/icomp2.hpp"
+#include "../interfaces/IPathFinder.hpp"
 #include "../interfaces/ilcm.hpp"
 #include "../interfaces/LanguageChangeInterface.hpp"
 #include "../ComponentDependency/ComponentDependency.hpp"
 class ILCM;
 class LanguageChangeInterface;
 
-class Component2:public Icomp2,public IsdkComponent,public LanguageChangeInterface{
+class PathFinder:public IPathFinder,public LanguageChangeInterface{
 	std::thread mainLoopthread;
 	ComponentDependency<ILCM> m_lcm;
 	void run(){
@@ -25,14 +25,14 @@ class Component2:public Icomp2,public IsdkComponent,public LanguageChangeInterfa
 			}
 		}
 public:
-	Component2(Idependencymanager &dp):m_lcm(dp){}
-	~Component2(){
+	PathFinder(Idependencymanager &dp):m_lcm(dp,"pathfinder",1,1){}
+	~PathFinder(){
 		if(mainLoopthread.joinable())
 					mainLoopthread.join();
 	}
 
 	virtual void start() override{
-		mainLoopthread = std::thread(&Component2::run,this);
+		mainLoopthread = std::thread(&PathFinder::run,this);
 	}
 
 	virtual void component2_method(std::shared_ptr<ILCM> lcm_ptr) override{
@@ -51,4 +51,4 @@ public:
 
 
 
-#endif /* SRC_COMPONENT2_COMPONENT2_HPP_ */
+#endif /* SRC_PATHFINDER_PATHFINDER_HPP_ */
